@@ -1,0 +1,3 @@
+- Background Color: `[#000000]`
+- Primary Color: `[#ff0000]`
+- Text Color: `[#ffffff]`

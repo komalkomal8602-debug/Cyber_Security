@@ -22,6 +22,7 @@ import {
   FiMoon,
   FiLogIn,
   FiHome,
+  FiUserPlus,
 } from "react-icons/fi";
 
 // ✅ FIXED IMPORT
@@ -78,9 +79,25 @@ function NavbarContent() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const { isDarkMode, toggleTheme } = useTheme();
 
   const navigate = useNavigate();
+
+  // Check login status on mount
+  useEffect(() => {
+    const userLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(userLoggedIn);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userData");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
 
   const toggleMobileDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
@@ -104,7 +121,7 @@ function NavbarContent() {
 
   return (
     <nav
-     className={`w-full fixed top-0 z-50 overflow-x-hidden transition-colors duration-300 ${
+      className={`w-full fixed top-0 z-50 overflow-x-hidden transition-colors duration-300 ${
         isDarkMode ? "bg-black" : "bg-white"
       } border-b ${
         isDarkMode ? "border-green-800/30" : "border-green-200"
@@ -220,16 +237,42 @@ function NavbarContent() {
               />
             </button>
 
-            {/* USER */}
+            {/* USER - Desktop */}
 
-            <Link to="/account">
-              <button className="hidden sm:block p-2 rounded-full hover:bg-green-500/10">
-                <FiUser
-                  size={20}
-                  className={isDarkMode ? "text-white" : "text-black"}
-                />
-              </button>
-            </Link>
+            {!isLoggedIn ? (
+              <div className="hidden sm:flex items-center gap-2">
+                <Link to="/login">
+                  <button className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium transition-all duration-200 flex items-center gap-2">
+                    <FiLogIn size={16} />
+                    Login
+                  </button>
+                </Link>
+                <Link to="/signup">
+                  <button className="px-4 py-2 rounded-lg border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white font-medium transition-all duration-200 flex items-center gap-2">
+                    <FiUserPlus size={16} />
+                    Sign Up
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-2">
+                <Link to="/account">
+                  <button className="p-2 rounded-full hover:bg-green-500/10 relative group">
+                    <FiUser
+                      size={20}
+                      className={isDarkMode ? "text-white" : "text-black"}
+                    />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-black"></span>
+                  </button>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 rounded-lg text-red-500 hover:bg-red-500/10 font-medium transition-all duration-200"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
 
             {/* CART */}
 
@@ -270,7 +313,8 @@ function NavbarContent() {
         {/* DESKTOP MENU */}
 
         <div className="hidden lg:block">
-<ul className="flex flex-wrap justify-center items-center py-2 gap-1 xl:gap-2 overflow-hidden">            {/* HOME */}
+          <ul className="flex flex-wrap justify-center items-center py-2 gap-1 xl:gap-2">
+            {/* HOME */}
 
             <li>
               <Link to="/">
@@ -503,25 +547,52 @@ function NavbarContent() {
                 </div>
 
                 <div className="p-4 border-t space-y-2">
-                  <Link to="/account">
-                    <button
-                      className={`w-full flex items-center justify-center gap-2 p-3 rounded-lg ${
-                        isDarkMode
-                          ? "bg-gray-900 text-white"
-                          : "bg-gray-100 text-black"
-                      }`}
-                    >
-                      <FiUser size={18} />
-                      <span>My Account</span>
-                    </button>
-                  </Link>
-
-                  <Link to="/login">
-                    <button className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-green-500 text-white">
-                      <FiLogIn size={18} />
-                      <span>Login / Register</span>
-                    </button>
-                  </Link>
+                  {!isLoggedIn ? (
+                    <>
+                      <Link to="/login">
+                        <button
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-green-500 text-white"
+                        >
+                          <FiLogIn size={18} />
+                          <span>Login</span>
+                        </button>
+                      </Link>
+                      
+                      <Link to="/signup">
+                        <button
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg border-2 border-green-500 text-green-500 font-medium hover:bg-green-500 hover:text-white transition-all duration-200"
+                        >
+                          <FiUserPlus size={18} />
+                          <span>Sign Up</span>
+                        </button>
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/account">
+                        <button
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-black dark:text-white"
+                        >
+                          <FiUser size={18} />
+                          <span>My Account</span>
+                        </button>
+                      </Link>
+                      
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-200"
+                      >
+                        <FiLogIn size={18} />
+                        <span>Logout</span>
+                      </button>
+                    </>
+                  )}
                 </div>
               </motion.div>
             </>
