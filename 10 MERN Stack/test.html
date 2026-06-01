@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+        }
+
+        .flex{
+            display: flex;
+            width: 100vw;
+            justify-content: space-between;
+            gap: 6px;
+        }
+        
+        .main{
+            display: flex;
+            background-color: black;
+            color: white;
+            flex-direction: column;
+            height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .b{
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+    <main class="main">
+        <!-- top -->
+        <div class="flex" >
+            <h1>1</h1>
+            <h1>2</h1>
+            <div class="b">
+                <h1>3</h1>
+                <h1>4</h1>
+            </div>
+        </div>
+        <!-- center -->
+         <div>
+            <h1>5</h1>
+         </div>
+         <!-- bottom -->
+          <div class="flex">
+              <h1>6</h1>
+              <div class="flex">
+            <h1>7</h1>
+                <h1>8</h1>
+            </div>
+          </div>
+    </main>
+    
+</body>
+</html>
