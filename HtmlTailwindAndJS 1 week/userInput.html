@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+
+    <h1>User Input</h1>
+
+    <input id="inputvalue" type="text" placeholder="Enter Number">
+
+    <div>
+        <button onclick="Even()">Even or Odd</button>
+    </div>
+
+    <p id="result"> Result</p>
+
+    <script>
+        function Even() {
+            let n = parseInt(document.getElementById('inputvalue').value);
+
+            if (n % 2 === 0) {
+                document.getElementById('result').innerHTML = 'Even';
+            } else {
+                document.getElementById('result').innerHTML = 'Odd';
+            }
+        }
+    </script>
+
+</body>
+</html>
